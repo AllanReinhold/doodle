@@ -10,6 +10,7 @@ class AuthController extends Zend_Controller_Action
 
     public function indexAction()
     {
+        $this->view->headTitle('Log-in');
         $form = new Application_Form_Login();
         $request = $this->getRequest();
         if ($request->isPost()) {
