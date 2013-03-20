@@ -1,0 +1,31 @@
+<?php
+
+class Zend_View_Helper_LoggedInAs extends Zend_View_Helper_Abstract {
+
+    public function loggedInAs() {
+        $auth = Zend_Auth::getInstance();
+        if ($auth->hasIdentity()) {
+            $username = $auth->getIdentity()->username;
+            $logoutUrl = $this->view->url(array('controller' => 'auth',
+                'action' => 'logout'), null, true);
+            return 'Welcome ' . $username . '. <a href="' . $logoutUrl . '">Logout</a>';
+        } else {
+            if(Zend_Controller_Front::getInstance()->getRequest()->getControllerName() != 'auth') {
+                $this->_redirector = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
+                $this->_redirector->gotoUrl('/auth/index'); 
+            }
+        }
+
+        $request = Zend_Controller_Front::getInstance()->getRequest();
+        $controller = $request->getControllerName();
+        $action = $request->getActionName();
+        if ($controller == 'auth' && $action == 'index') {
+            return '';
+        }
+
+        $loginUrl = $this->view->url(array('controller' => 'auth', 'action' => 'index'));
+        return '<a href="' . $loginUrl . '">Login</a>';
+    }
+}
+
+?>
